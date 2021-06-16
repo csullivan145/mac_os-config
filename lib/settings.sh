@@ -11,22 +11,25 @@ IFS=$'\n\t'
 # Homebrew
 export HOMEBREW_CURL_RETRIES=3
 
+# Ruby
+export MRI=3.0.0
+
 # Repositories
-export REPO_SUBLIME_TEXT_SETUP=17.0.0
-export REPO_DOTFILES=43.1.0
+export REPO_RUBY_SETUP=14.0.0
+export REPO_YARN_SETUP=2.0.0
+export REPO_SUBLIME_TEXT_SETUP=15.0.0
+export REPO_DOTFILES=41.0.0
 
 # Applications
-export ELM_APP_NAME="elm"
-export ELM_APP_URL="https://github.com/elm/compiler/releases/download/0.19.1/installer-for-mac.pkg"
-
 export DOCKER_APP_NAME="Docker.app"
 export DOCKER_VOLUME_NAME="Docker"
+export DOCKER_APP_URL="https://download.docker.com/mac/stable/Docker.dmg"
 
-if [[ "$(/usr/bin/arch)" == "arm64" ]]; then
-  export DOCKER_APP_URL="https://desktop.docker.com/mac/stable/arm64/Docker.dmg"
-else
-  export DOCKER_APP_URL="https://desktop.docker.com/mac/stable/amd64/Docker.dmg"
-fi
+export GIT_FILTER_REPO_APP_NAME="git-filter-repo"
+export GIT_FILTER_REPO_APP_URL="https://raw.githubusercontent.com/newren/git-filter-repo/master/git-filter-repo"
+
+export NET_NEWS_WIRE_APP_NAME="NetNewsWire.app"
+export NET_NEWS_WIRE_APP_URL="https://github.com/Ranchero-Software/NetNewsWire/releases/download/mac-5.1.3/NetNewsWire5.1.3.zip"
 
 export SONOS_APP_NAME="Sonos S1 Controller.app"
 export SONOS_VOLUME_NAME="Sonos"

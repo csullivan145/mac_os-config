@@ -1,5 +1,17 @@
 #! /usr/bin/env bash
 
+# make file on the Desktop containing a list of things that I haven't automated yet
+TODO="$HOME/Desktop/TO DO.txt"
+printf "\nCreating a to-do file on desktop of things that are not automated\n"
+echo $'System Preferences - Desktop & Screen Saver - Screen Saver - Start after 2 min - Security - Require password after 5 seconds\n' >> "$TODO"
+echo $'Moom - Launch automatically on login\n' >> "$TODO"
+echo $'Messages - enable Messages in iCloud - remove icloud aliases, set up SMS forwarding on iPhone\n' >> "$TODO"
+echo $'System Preferences - Notifications - Un-check show notifications on lock screen for all apps\n' >> "$TODO"
+echo $'System Preferences - Keyboard - Touch Bar shows: Expanded control strip, customize control strip\n' >> "$TODO"
+echo $'System Preferences - Sound - un-check Play user interface sound effects (because defaults write com.apple.systemsound "com.apple.sound.uiaudio.enabled" -int 0 doesn\'t seem to work anymore\n' >> "$TODO"
+
+
+
 # Applies system and application defaults.
 
 printf "%s\n" "System - Disable boot sound effects."
@@ -23,14 +35,26 @@ defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 printf "%s\n" "System - Disable window resume system-wide."
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
 
-printf "%s\n" "System - Disable auto-correct."
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+printf "System - Always show scroll bars\n"
+defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
 
-printf "%s\n" "System - Disable smart quotes (not useful when writing code)."
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+printf "System - Click in the Scroll bar to jump to the spot that's clicked\n"
+defaults write NSGlobalDomain AppleScrollerPagingBehavior -int 1
 
-printf "%s\n" "System - Disable smart dashes (not useful when writing code)."
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+printf "System - Set 'Allow apps downloaded from: Anywhere'\n"
+sudo spctl --master-disable
+
+# printf "%s\n" "System - Disable auto-correct."
+# defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# printf "%s\n" "System - Disable smart quotes (not useful when writing code)."
+# defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+# printf "%s\n" "System - Disable smart dashes (not useful when writing code)."
+# defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+printf "System - Prevent computer from sleeping automatically when the display is off\n"
+sudo pmset -a sleep 0
 
 printf "%s\n" "System - Require password immediately after sleep or screen saver begins."
 defaults write com.apple.screensaver askForPassword -int 1
@@ -66,6 +90,9 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightC
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 
+printf "%s\n" "Trackpad - Disable Natural Scroll."
+defaults write -g com.apple.swipescrolldirection -bool FALSE
+
 printf "%s\n" "Trackpad - Enable tap to click for current user and the login screen."
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
@@ -93,11 +120,21 @@ defaults write com.apple.systemuiserver menuExtras -array \
 printf "%s\n" "Dock - Remove all default app icons."
 defaults write com.apple.dock persistent-apps -array
 
+printf "Dock - Adding my preferred app icons\n"
+defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Google Chrome.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
+defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/System/Applications/Messages.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
+defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/Slack.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
+defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/System/Applications/Notes.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
+
+
 printf "%s\n" "Dock - Automatically hide and show."
 defaults write com.apple.dock autohide -bool true
 
 printf "%s\n" "Dock - Remove the auto-hiding delay."
-defaults write com.apple.Dock autohide-delay -float 0
+defaults write com.apple.dock autohide-delay -float 0
+
+printf "%s\n" "Dock - Dock Left."
+defaults write com.apple.dock orientation -string left
 
 printf "%s\n" "Dock - Don’t show Dashboard as a Space."
 defaults write com.apple.dock "dashboard-in-overlay" -bool true
@@ -108,8 +145,11 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 printf "%s\n" "Finder - Show the $HOME/Library folder."
 chflags nohidden $HOME/Library
 
-printf "%s\n" "Finder - Show hidden files."
-defaults write com.apple.finder AppleShowAllFiles -bool true
+# printf "%s\n" "Finder - Show hidden files."
+# defaults write com.apple.finder AppleShowAllFiles -bool true
+
+printf "Screenshots - disable thumbnail preview\n"
+defaults write com.apple.screencapture show-thumbnail -bool FALSE
 
 printf "%s\n" "Finder - Show filename extensions."
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -213,3 +253,20 @@ defaults write com.apple.appstore WebKitDeveloperExtras -bool true
 
 printf "%s\n" "App Store - Enable Debug Menu in the Mac App Store."
 defaults write com.apple.appstore ShowDebugMenu -bool true
+
+printf "Finder - When performing a search, search the current folder by default\n"
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+printf "Delete useless apps if this is a new Mac\n"
+rm -f /Applications/GarageBand.app
+rm -f /Applications/iMovie.app
+
+printf "Restarting affected processes\n"
+killAll Dock
+killAll Finder
+
+printf "Xcode - Updating Commnand Line Tools\n"
+xcode-select --install
+
+printf "App Store - Install Apple software updates\n"
+sudo softwareupdate -ia
